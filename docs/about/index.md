@@ -1,47 +1,43 @@
-We welcome all contributions - send a pull request or open an issue. When possible, send different
-pull requests by section/topic.
+모든 기여 참여활동을 환영합니다 - pull request를 만들거나 이슈를 생성해 주세요.
+가능하시다면, 섹션이나 토픽별로 별개의 pull request를 만들어주세요.
 
-Feel free to peruse the
-[open issues](https://github.com/ConsenSys/smart-contract-best-practices/issues) for ideas which
-need to be expanded on a bit here.
+자유롭게 [이슈](https://github.com/klaytn/smart-contract-best-practices-kr/issues)
+내용들을 읽고, 사이트를 개선하기 위한 아이디어를 얻보세요.
 
-## Editing and Submitting changes
+## 수정 및 변경사항 제출 방법
 
-1. Fork the repo
-2. Make changes to the markdown files in the `docs/` directory of the master branch
-3. Submit a Pull Request
+1. 이 저장소를 포크해서 자신만의 저장소를 생성합니다.
+2. `master` 브랜치 기준으로 `docs/` 디렉토리 하위에 있는 마크다운 파일들을 수정합니다.
+3. Pull Request를 생성합니다.
 
-## Audience
+## 독자
 
-Write for an intermediate Ethereum developer, they know the basics of Solidity programming and have
-coded a number of contracts
+중급 솔리디티 개발자를 대상으로 문서를 작성합니다.
+기본적인 솔리디티 프로그래밍을 익히고 몇개의 컨트랙트를 작성해본 경험이 있는 독자가 주 대상입니다.
 
-## Style Guidelines
+## 스타일 가이드라인
 
-### General
+### 일반
 
-- **Favor succinctness in writing**
-  - Use max 3-4 sentences in a section (exceptions can be made when critical)
-  - Show, don’t tell (examples speak more than lengthy exposition)
-  - Include a simple, illustrative example rather than complex examples that require substantial,
-    extraneous reading
-- **Add a source link to the original document when available**
-- **Create new sections when warranted**
-- **Keep code lines under 80 characters when possible**
-- **Mark code** as insecure, bad, good where relevant
-- Use the format of the [Airbnb Javascript Style guide](https://github.com/airbnb/javascript) as a
-  starting point
+- **간결한 작성**
+  - 한 섹션에는 최대 3-4 문장만을 사용 (정말 중요한 사항은 예외 가능)
+  - 설명하는 것보다 보여주는 방식 (구구절절 설명하기 보단 예시 사용)
+  - 불필요한 정보로 가득찬 복잡한 예시 보다는 간결하고 핵심적인 실례 포함
+- **가능하다면 원본 문서의 출처 링크를 추가해주세요**
+- **근거 설명을 위해서는 새로운 섹션을 만들어주세요**
+- **가능한 코드 한줄당 80자 미만을 유지해주세요**
+- 관련있는 내용에 위험함, 좋음, 나쁨으로 **표시**해주세요
+- 처음에는 [Airbnb Javascript Style guide](https://github.com/airbnb/javascript) 형식을 사용해주세요
 
-### Recommendations Section
+### 추천 섹션
 
-- Always favor a declarative tip starting with a verb for the section title
-- Include good and bad examples, when possible
-- Ensure each subsection has an anchor tag for future hyperlinking
+- 섹션 시작은 주어가 없는 선언적인 표현을 권장합니다
+- 가능한 좋은 예와 나쁜 예를 포함하세요
+- 각 하위 섹션은 하이퍼링크 생성을 위한 앵커 태그를 필요로합니다
 
-### Attacks Section
+### 공격 섹션
 
-- Provide an example - then point to a recommendation for the solution in the relevant section of
-  the doc
-- List first/most visible attack, where possible
-- Ensure each subsection has an anchor tag for future hyperlinking
-- Mark vulnerable pieces of code as `// INSECURE`
+- 예시를 제공합니다 - 그리고, 문서의 관련 섹션에서 해결책을 제안합니다
+- 가능한 가장 강력하거나 먼저 사용되는 공격을 나열합니다
+- 각 하위 섹션은 하이퍼링크 생성을 위한 앵커 태그를 필요로합니다
+- 취약한 코드 부분을 `// INSECURE` 표시합니다
