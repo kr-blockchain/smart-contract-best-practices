@@ -1,42 +1,37 @@
-[<img width="200" alt="get in touch with Consensys Diligence" src="https://user-images.githubusercontent.com/2865694/56826101-91dcf380-685b-11e9-937c-af49c2510aa0.png">](https://diligence.consensys.net)<br/>
-<sup>
-[[  🌐  ](https://diligence.consensys.net)  [  📩  ](mailto:diligence@consensys.net)  [  🔥  ](https://consensys.net/diligence/tools/)]
-</sup><br/><br/>
+# 스마트 컨트랙트 개발 모범 사례
 
++[Ethereum Smart Contract Best Practices](https://github.com/ConsenSys/smart-contract-best-practices)를 포크하여 한국어로 번역된 페이지를 제공합니다.
 
-# Smart Contract Security Best Practices
++한국어 사이트: https://kr-blockchain.github.io/smart-contract-best-practices/
 
-Visit the documentation site: https://consensys.github.io/smart-contract-best-practices/
++영문 사이트 (원본): https://consensys.github.io/smart-contract-best-practices/
++중국어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-zh.md
++베트남어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-vi.md
 
-Read the docs in Chinese: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-zh.md
-Read the docs in Vietnamese: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-vi.md
+## 참여를 환영합니다!
 
-## Contributions are welcome!
+자유롭게 수정을 위한 pull request 를 만들어주세요. 작은 수정 사항부터 새로운 섹션을 만드는 큰 기여까지 모두 환영합니다. 새로운 컨텐츠를 작성하실 때는 [contributing](./docs/about/index.md)에 있는 스타일 가이드를 참조하시길 바랍니다.
 
-Feel free to submit a pull request, with anything from small fixes, to full new sections. If you are writing new content, please reference the [contributing](./docs/about/contributing.md) page for guidance on style.
+번역하거나 새로운 업데이트를 위한 주제를 찾으시려면 [issues](https://github.com/kr-blockchain/smart-contract-best-practices/issues) 내용을 확인해주세요. 토론하고 싶으신 새로운 아이디어가 있으신 경우에는 [Gitter](https://gitter.im/kr-blockchain/smart-contract-best-practices)에서 채팅으로 알려주세요.
 
-See the [issues](https://github.com/ConsenSys/smart-contract-best-practices/issues) for topics that need to be covered or updated. If you have an idea you'd like to discuss, please chat with us in [Gitter](https://gitter.im/ConsenSys/smart-contract-best-practices).
-
-If you've written an article or blog post, please add it to the [bibliography](./docs/bibliography.md).
-
-## Building the documentation site
+## 문서 사이트 만들기
 
 ```
-git clone git@github.com:ConsenSys/smart-contract-best-practices.git
+git clone git@github.com:kr-blockchain/smart-contract-best-practices.git
 cd smart-contract-best-practices
 pip install -r requirements.txt
 mkdocs build 
 ```
 
-To run the server (and restart on failure):
+서버를 실행 명령어 (실패 시 재시작 포함):
 
 ```
 until mkdocs serve; do :; done
 ```
 
-You can also use the `mkdocs serve` command to view the site on localhost, and live reload whenever you save changes.
+localhost에서 웹 사이트를 운영하기 위해서는 `mkdocs serve` 명령어를 사용하시면 됩니다. 문서 수정 시마다 자동으로 다시 로딩됩니다.
 
-## Redeploying the documentation site
+## 문서 웹 사이트 신규 배포
 
 ```
 mkdocs gh-deploy
