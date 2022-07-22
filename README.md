@@ -2,13 +2,13 @@
 
 [![Join the chat at https://gitter.im/smart-contract-best-practices/community](https://badges.gitter.im/smart-contract-best-practices/community.svg)](https://gitter.im/smart-contract-best-practices/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-+[Ethereum Smart Contract Best Practices](https://github.com/ConsenSys/smart-contract-best-practices)를 포크하여 한국어로 번역된 페이지를 제공합니다.
+- [Ethereum Smart Contract Best Practices](https://github.com/ConsenSys/smart-contract-best-practices)를 포크하여 한국어로 번역된 페이지를 제공합니다.
 
-+한국어 사이트: https://kr-blockchain.github.io/smart-contract-best-practices/
+- 한국어 사이트: https://kr-blockchain.github.io/smart-contract-best-practices/
 
-+영문 사이트 (원본): https://consensys.github.io/smart-contract-best-practices/
-+중국어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-zh.md
-+베트남어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-vi.md
+- 영문 사이트 (원본): https://consensys.github.io/smart-contract-best-practices/
+- 중국어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-zh.md
+- 베트남어 번역본: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/README-vi.md
 
 ## 참여를 환영합니다!
 
