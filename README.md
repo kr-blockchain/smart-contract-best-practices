@@ -1,5 +1,7 @@
 # 스마트 컨트랙트 개발 모범 사례
 
+[![Join the chat at https://gitter.im/smart-contract-best-practices/community](https://badges.gitter.im/smart-contract-best-practices/community.svg)](https://gitter.im/smart-contract-best-practices/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 +[Ethereum Smart Contract Best Practices](https://github.com/ConsenSys/smart-contract-best-practices)를 포크하여 한국어로 번역된 페이지를 제공합니다.
 
 +한국어 사이트: https://kr-blockchain.github.io/smart-contract-best-practices/
