@@ -1,0 +1,2174 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="스마트 컨트랙트 개발 모범 사례 사이트">
+      
+      
+        <meta name="author" content="한국 스마트 컨트랙트 개발자 모임">
+      
+      
+        <link rel="canonical" href="https://kr-blockchain.github.io/smart-contract-best-practices/attacks/oracle-manipulation/">
+      
+      <link rel="icon" href="../../assets/images/CDili_black.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>Oracle Manipulation - 스마트 컨트랙트 개발 모범 사례</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+
+  <script>window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-235222547-1","auto"),ga("set","anonymizeIp",!0),ga("send","pageview"),document.addEventListener("DOMContentLoaded",function(){document.forms.search&&document.forms.search.query.addEventListener("blur",function(){var e;this.value&&(e=document.location.pathname,ga("send","pageview",e+"?q="+this.value))}),"undefined"!=typeof location$&&location$.subscribe(function(e){ga("send","pageview",e.pathname)})})</script>
+  <script async src="https://www.google-analytics.com/analytics.js"></script>
+
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="deep-purple">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spot-price-manipulation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="스마트 컨트랙트 개발 모범 사례" class="md-header__button md-logo" aria-label="스마트 컨트랙트 개발 모범 사례" data-md-component="logo">
+      
+  <img src="../../assets/images/CDili.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z" /></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            스마트 컨트랙트 개발 모범 사례
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Oracle Manipulation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="deep-purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z" /></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A7,7 0 0,1 19,9C19,11.38 17.81,13.47 16,14.74V17A1,1 0 0,1 15,18H9A1,1 0 0,1 8,17V14.74C6.19,13.47 5,11.38 5,9A7,7 0 0,1 12,2M9,21V20H15V21A1,1 0 0,1 14,22H10A1,1 0 0,1 9,21M12,4A5,5 0 0,0 7,9C7,11.05 8.23,12.81 10,13.58V16H14V13.58C15.77,12.81 17,11.05 17,9A5,5 0 0,0 12,4Z" /></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" /></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" /></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kr-blockchain/smart-contract-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../general-philosophy/" class="md-tabs__link">
+        General Philosophy
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../development-recommendations/" class="md-tabs__link">
+        Development Recommendations
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../" class="md-tabs__link md-tabs__link--active">
+        Attacks
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../security-tools/" class="md-tabs__link">
+        Security Tools
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../bug-bounty-programs/" class="md-tabs__link">
+      Bug Bounty Programs
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../about/" class="md-tabs__link">
+        About
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="스마트 컨트랙트 개발 모범 사례" class="md-nav__button md-logo" aria-label="스마트 컨트랙트 개발 모범 사례" data-md-component="logo">
+      
+  <img src="../../assets/images/CDili.png" alt="logo">
+
+    </a>
+    스마트 컨트랙트 개발 모범 사례
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kr-blockchain/smart-contract-best-practices" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05L244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Github
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../general-philosophy/">General Philosophy</a>
+          
+            <label for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="General Philosophy" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          General Philosophy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/prepare-for-failure/" class="md-nav__link">
+        Prepare for Failure
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/stay-up-to-date/" class="md-nav__link">
+        Stay up to Date
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/simplicity/" class="md-nav__link">
+        Keep it Simple
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/rollout/" class="md-nav__link">
+        Rolling out
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/blockchain-properties/" class="md-nav__link">
+        Blockchain Properties
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../general-philosophy/simplicity-vs-complexity/" class="md-nav__link">
+        Simplicity vs. Complexity
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../development-recommendations/">Development Recommendations</a>
+          
+            <label for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Development Recommendations" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Development Recommendations
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          General
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="General" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          General
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/general/external-calls/" class="md-nav__link">
+        External Calls
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/general/force-feeding/" class="md-nav__link">
+        Force-feeding Ether
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/general/public-data/" class="md-nav__link">
+        Public on-chain Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/general/participants/" class="md-nav__link">
+        Unreliable Participants
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/general/negative-int/" class="md-nav__link">
+        Negation of Signed Integers
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_3">
+          Precautions
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Precautions" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Precautions
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/general/" class="md-nav__link">
+        General
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/upgradeability/" class="md-nav__link">
+        Upgradeability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/circuit-breakers/" class="md-nav__link">
+        Circuit Breakers
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/speed-bumps/" class="md-nav__link">
+        Speed Bumps
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/rate-limiting/" class="md-nav__link">
+        Rate Limiting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/deployment/" class="md-nav__link">
+        Deployment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/precautions/safe-haven/" class="md-nav__link">
+        Safe Haven
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Solidity-specific
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Solidity-specific" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Solidity-specific
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/assert-require-revert/" class="md-nav__link">
+        Assert, Require, Revert
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/modifiers-as-guards/" class="md-nav__link">
+        Modifiers as Guards
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/integer-division/" class="md-nav__link">
+        Integer Division
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/abstract-vs-interfaces/" class="md-nav__link">
+        Abstract vs Interfaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/fallback-functions/" class="md-nav__link">
+        Fallback Functions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/payability/" class="md-nav__link">
+        Payability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/visibility/" class="md-nav__link">
+        Visibility
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/locking-pragmas/" class="md-nav__link">
+        Locking Pragmas
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/event-monitoring/" class="md-nav__link">
+        Event Monitoring
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/shadowing/" class="md-nav__link">
+        Shadowing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/tx-origin/" class="md-nav__link">
+        tx.origin
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/timestamp-dependence/" class="md-nav__link">
+        Timestamp Dependence
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/complex-inheritance/" class="md-nav__link">
+        Complex Inheritance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/interface-types/" class="md-nav__link">
+        Interface Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/solidity-specific/extcodesize-checks/" class="md-nav__link">
+        EXTCODESIZE Checks
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_5">
+          Token-specific
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Token-specific" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Token-specific
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/token-specific/standardization/" class="md-nav__link">
+        Standardization
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/token-specific/frontrunning/" class="md-nav__link">
+        Frontrunning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/token-specific/zero-address/" class="md-nav__link">
+        Zero Address
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/token-specific/contract-address/" class="md-nav__link">
+        Contract Address
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_6">
+          Documentation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Documentation" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Documentation
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/general/" class="md-nav__link">
+        General
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/specification/" class="md-nav__link">
+        Specification
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/status/" class="md-nav__link">
+        Status
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/procedures/" class="md-nav__link">
+        Procedures
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/known-issues/" class="md-nav__link">
+        Known Issues
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/history/" class="md-nav__link">
+        History
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/documentation/contact/" class="md-nav__link">
+        Contact
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_7" type="checkbox" id="__nav_3_7" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3_7">
+          Deprecated
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Deprecated" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          Deprecated
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/deprecated/division-by-zero/" class="md-nav__link">
+        Division by Zero
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/deprecated/functions-and-events/" class="md-nav__link">
+        Functions and Events
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../development-recommendations/deprecated/constructor-naming/" class="md-nav__link">
+        Constructor Naming
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../">Attacks</a>
+          
+            <label for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Attacks" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Attacks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reentrancy/" class="md-nav__link">
+        Reentrancy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Oracle Manipulation
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Oracle Manipulation
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#spot-price-manipulation" class="md-nav__link">
+    Spot Price Manipulation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#off-chain-infrastructure" class="md-nav__link">
+    Off-Chain Infrastructure
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#centralized-oracles-and-trust" class="md-nav__link">
+    Centralized Oracles and Trust
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decentralized-oracle-security" class="md-nav__link">
+    Decentralized Oracle Security
+  </a>
+  
+    <nav class="md-nav" aria-label="Decentralized Oracle Security">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#freeloading" class="md-nav__link">
+    Freeloading
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mirroring" class="md-nav__link">
+    Mirroring
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    Solutions
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontrunning/" class="md-nav__link">
+        Frontrunning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../timestamp-dependence/" class="md-nav__link">
+        Timestamp Dependence
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../insecure-arithmetic/" class="md-nav__link">
+        Insecure Arithmetic
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../denial-of-service/" class="md-nav__link">
+        Denial of Service
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../griefing/" class="md-nav__link">
+        Griefing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../force-feeding/" class="md-nav__link">
+        Force Feeding
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deprecated/" class="md-nav__link">
+        Deprecated/Historical
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../more/" class="md-nav__link">
+        More
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../security-tools/">Security Tools</a>
+          
+            <label for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="Security Tools" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Security Tools
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-tools/visualization/" class="md-nav__link">
+        Visualization
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-tools/static-and-dynamic-analysis/" class="md-nav__link">
+        Static and Dynamic Analysis
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-tools/classification/" class="md-nav__link">
+        Classification
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-tools/testing/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security-tools/linters-and-formatters/" class="md-nav__link">
+        Linters and Formatters
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../bug-bounty-programs/" class="md-nav__link">
+        Bug Bounty Programs
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        
+          
+            
+          
+        
+          
+        
+      
+      
+        
+        
+        <div class="md-nav__link md-nav__link--index ">
+          <a href="../../about/">About</a>
+          
+            <label for="__nav_7">
+              <span class="md-nav__icon md-icon"></span>
+            </label>
+          
+        </div>
+      
+      <nav class="md-nav" aria-label="About" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          About
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/kr-blockchain/smart-contract-best-practices/edit/master/docs/attacks/oracle-manipulation.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" /></svg>
+  </a>
+
+
+
+  <h1>Oracle Manipulation</h1>
+
+<p>Protocols sometimes require additional information from outside the realm of the blockchain to function correctly.
+Such off-chain information is provided by <a href="https://ethereum.org/en/developers/docs/oracles/">oracles</a>, which often are smart contracts themselves.</p>
+<p>A vulnerability arises when protocols relying on oracles automatically execute actions even though the oracle-provided data feed is incorrect.
+An oracle with deprecated or even malicious contents can have disastrous effects on all processes connected to the data feed.
+In practice, manipulated data feeds can cause significant damage, from unwarranted liquidations to malicious arbitrage trades.
+The following sections provide examples illustrating common vulnerabilities and malfunctions involving oracles.</p>
+<h2 id="spot-price-manipulation">Spot Price Manipulation<a class="headerlink" href="#spot-price-manipulation" title="Permanent link">&para;</a></h2>
+<p>A classic vulnerability comes from the world of on-chain price oracles: Trusting the spot price of a decentralized exchange.</p>
+<p>The scenario is simple. A smart contract needs to determine the price of an asset, e.g., when a user deposits ETH into its system.
+To achieve this price discovery, the protocol consults its respective Uniswap pool as a source.
+Exploiting this behavior, an attacker can take out a flash loan to drain one side of the Uniswap pool.
+Due to the lack of data source diversity, the protocol's internal price is directly manipulated, e.g., to 100 times the original value.
+The attacker can now perform an action to capture this additional value.
+For example, an arbitrage trade on top of the newly created price difference or an advantageous position in the system can be gained.</p>
+<p>The problems are two-fold:</p>
+<ol>
+<li>The use of a single price feed source smart contract allows for easy on-chain manipulation using flash loans.</li>
+<li>Despite a notable anomaly, the smart contracts consuming the price information continue to operate on the manipulated data.</li>
+</ol>
+<p>A more concrete example is provided by the Visor Hack.
+The <a href="https://github.com/VisorFinance/hypervisor/blob/e772228ed5e27239161c3173c550265b5548e9f5/contracts/Hypervisor.sol#L102-L103">following code</a> shows that on deposit, the price feed is fetched directly from Uniswap:</p>
+<div class="highlight"><pre><span></span><code><span class="kt">uint160</span><span class="w"> </span><span class="nv">sqrtPrice</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>TickMath<span class="p">.</span>getSqrtRatioAtTick<span class="p">(</span>currentTick<span class="p">());</span><span class="w"></span>
+<span class="kt">uint256</span><span class="w"> </span><span class="nv">price</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FullMath<span class="p">.</span>mulDiv<span class="p">(</span><span class="kt">uint256</span><span class="p">(</span>sqrtPrice<span class="p">).</span>mul<span class="p">(</span><span class="kt">uint256</span><span class="p">(</span>sqrtPrice<span class="p">)),</span><span class="w"> </span>PRECISION<span class="p">,</span><span class="w"> </span><span class="m m-Decimal">2</span><span class="o">**</span><span class="p">(</span><span class="m m-Decimal">96</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m m-Decimal">2</span><span class="p">));</span><span class="w"></span>
+</code></pre></div>
+<p>Here, <code>currentTick()</code> directly fetches the <a href="https://github.com/VisorFinance/hypervisor/blob/e772228ed5e27239161c3173c550265b5548e9f5/contracts/Hypervisor.sol#L515-L518">current price tick</a> from a Uniswap pool:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// @return tick Uniswap pool&#39;s current price tick</span>
+<span class="kt">function</span><span class="w"> </span><span class="nv">currentTick</span><span class="p">()</span><span class="w"> </span><span class="kt">public</span><span class="w"> </span>view<span class="w"> </span><span class="kt">returns</span><span class="w"> </span><span class="p">(</span><span class="kt">int24</span><span class="w"> </span><span class="nv">tick</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="w">    </span><span class="p">(,</span><span class="w"> </span>tick<span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>pool<span class="p">.</span>slot0<span class="p">();</span><span class="w"></span>
+<span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>As this price data is fetched from an on-chain dependency, and the price data is determined in the current transaction context, this spot price can be manipulated in the same transaction.</p>
+<ol>
+<li>An attacker can take out a flash loan on the incoming asset A and on the relevant Uniswap pool, swap asset A for asset B with a large volume.</li>
+<li>This trade will increase the price of asset B (increased demand) and reduce the cost of asset A (increased supply).</li>
+<li>When asset B is deposited into the above function, its price is still pumped up by the flash loan.</li>
+<li>Consequentially, asset B gives the attacker an over-proportional amount of shares.</li>
+<li>These shares can be withdrawn, giving the attacker equal parts of asset A and asset B from the pool.</li>
+<li>Repeating this process will drain the vulnerable pool of all funds.</li>
+<li>With the money gained from the withdrawal of their shares, the attacker can repay the flash loan.</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Under no circumstances should a decentralized exchange's spot price be used directly for price discovery.
+Secure price calculation can be performed, e.g., by using time-weighted average prices (TWAPs) across longer time intervals.
+Assuming sufficient liquidity, this severely increases the cost of a price manipulation attack, making it unfeasible.
+An example for facilitating secure price discovery is the <a href="https://docs.uniswap.org/protocol/reference/periphery/libraries/OracleLibrary">Uniswap V3 <code>OracleLibrary</code></a> docs.</p>
+</div>
+<h2 id="off-chain-infrastructure">Off-Chain Infrastructure<a class="headerlink" href="#off-chain-infrastructure" title="Permanent link">&para;</a></h2>
+<p>By definition, a data feed transporting off-chain information into a smart contract requires traditional software to run.
+From the sensor hardware or manual entry to authenticated APIs submitting data on-chain, it is not uncommon for a plethora of software to be involved.</p>
+<p>Depending on the concrete implementation, attacks on access control, cryptographic implementation, transport, and database security, among others, can be performed.
+As a result, software providing oracle services must be hardened and adhere to security best practices such as the <a href="https://owasp.org/www-project-secure-coding-practices-quick-reference-guide/migrated_content">OWASP Secure Coding Practices</a>.
+Especially oracles which don't offer a community-driven dispute phase must be hardened as their compromise will directly affect dependent applications.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Eskandari et al. divided the concept of an oracle into the following six modules:</p>
+<ul>
+<li>Ground Truth</li>
+<li>Data Sources</li>
+<li>Data Feeders</li>
+<li>Selection of Data Feeders</li>
+<li>Aggregation</li>
+<li>Dispute Phase</li>
+</ul>
+<p>Their publication provides a great read on design principles, attacks, and mitigations.</p>
+<div class="highlight"><pre><span></span><code>Shayan Eskandari, Mehdi Salehi, Wanyun Catherine Gu, and Jeremy Clark. 2021.
+SoK: oracles from the ground truth to market manipulation.
+Proceedings of the 3rd ACM Conference on Advances in Financial Technologies.
+Association for Computing Machinery, New York, NY, USA, 127–141.
+DOI:https://doi.org/10.1145/3479722.3480994
+</code></pre></div>
+</div>
+<p>An excellent example of an off-chain component malfunction affecting on-chain oracle data feeds is the Synthetix sKRW incident.
+Synthetix aggregates multiple related price-feeds to accurately price their derivatives and surfaces the aggregate through a smart contract on-chain.
+With a value erroneously reported 1000 times higher than the original, the price of the Korean Won was reported significantly higher, even though the aggregation.
+An arbitrage bot used this effect, which promptly earned it a profit of over 1B USD.
+While on-chain aggregation and price reporting worked correctly, an off-chain component failure resulted in the incident.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>samczsun wrote a <a href="https://www.paradigm.xyz/2020/11/so-you-want-to-use-a-price-oracle">great article</a> on the Paradigm blog elaborating this incident and various other price oracle related incidents.</p>
+</div>
+<h2 id="centralized-oracles-and-trust">Centralized Oracles and Trust<a class="headerlink" href="#centralized-oracles-and-trust" title="Permanent link">&para;</a></h2>
+<p>Projects can also choose to implement a centralized oracle.
+Such a smart contract's update method can, e.g., be protected by an <code>onlyOwner</code> modifier and require users to trust in the correct and timely submission of data.
+Depending on the size and structure of the system, this centralized trust can lead to the authorized user(s) getting incentivized to submit malicious data and abuse their position of power.</p>
+<p>Additionally, such centralized systems can have an inherent risk due to compromised private keys.</p>
+<h2 id="decentralized-oracle-security">Decentralized Oracle Security<a class="headerlink" href="#decentralized-oracle-security" title="Permanent link">&para;</a></h2>
+<p>Decentralized oracles aim to diversify the group of data collectors to a point where disrupting a quorum of participants becomes unfeasible for an attacker.
+In a decentralized scenario, further security considerations stem from how participants are incentivized and what sort of misbehavior if left unpunished.
+Participants providing (valid) data to the oracle system are economically rewarded.
+Aiming to maximize their profit, the participants are incentivized to provide the cheapest version of their service possible.</p>
+<h3 id="freeloading">Freeloading<a class="headerlink" href="#freeloading" title="Permanent link">&para;</a></h3>
+<p><strong>Freeloading</strong> attacks are the simplest form to save work and maximize profit.
+A node can leverage another oracle or off-chain component (such as an API) and simply copy the values without validation.
+For example, an oracle providing weather data might expect data providers to measure temperature and wind speed in a specific location.
+Nodes are, however, incentivized to use a publicly available weather data API and simply surface their data to the system.
+Besides the apparent data source centralization issue, freeloading attacks at scale can also severely affect the data's correctness.
+This effect is most visible when sampling rates vary, e.g., the on-chain oracle expects a sampling rate of 10 minutes while freeloading nodes provide data from an API that is updated once every hour.</p>
+<p>Freeloading in decentralized oracle data marketplaces can amplify a price race to the bottom as freeloading only requires a simple lookup. At the same time, proper data provisioning might involve a more significant computational overhead.
+With less competition in cheaper price ranges, a few freeloading nodes could even be able to take over a data feed.
+Freeloading attacks can be easily prevented for more complex data feeds by implementing a commit-reveal scheme.
+This security measure will prevent oracle system participants from peeking into each other's data.
+For simpler data provisioning, consistency checks punishing nodes that obviously copy data from well-known public services can be implemented.
+Data collectors contributing to the centralization of the overall service will be disincentivized.</p>
+<h3 id="mirroring">Mirroring<a class="headerlink" href="#mirroring" title="Permanent link">&para;</a></h3>
+<p><strong>Mirroring</strong> attacks are a flavor of Sybil attacks and can go hand-in-hand with freeloading.
+Similarly, misbehaving nodes aim to save work by reading from a centralized data source, optionally with a reduced sampling rate.
+A single node reading from the centralized data source then replicates its values across other participants who mirror that data.
+With a single data read, the reward for providing the information is multiplied by the number of participants.
+As the number of mirroring participants grows, this increased weight on a single data point can significantly deteriorate error correction mechanisms.
+A similar outcome to a mirroring attack can happen accidentally when a large, uninformed part of a community relies on a single data source.</p>
+<p>A commit-reveal scheme is ineffective to mitigate (purposeful) mirroring attacks as it does not consider private data transfers between Sybil nodes.
+Due to the lack of transparency in Sybil communications, mirroring attacks can be very hard to detect in practice.</p>
+<h2 id="solutions">Solutions<a class="headerlink" href="#solutions" title="Permanent link">&para;</a></h2>
+<p>Currently, the easiest ways to solve the oracle problem are decentralized oracles, such as:</p>
+<ul>
+<li><a href="https://chain.link/">Chainlink</a> is the largest decentralized oracle provider, and the Chainlink network can be leveraged to bring decentralized data on-chain.</li>
+<li><a href="https://tellor.io/">Tellor</a> is an oracle that provides censorship-resistant data, secured by economic incentives, ensuring data can be provided by anyone, anytime, and checked by everyone.</li>
+<li><a href="https://witnet.io/">Witnet</a> leverages state-of-the-art cryptographic and economic incentives to provide smart contracts with off-chain data.</li>
+</ul>
+<p>Using a median of multiple oracles provides heightened security since it is harder and more expensive to attack various oracles.
+It also ensures that a smart contract gets the data it needs even if one oracle or API call fails. </p>
+<p>Another standard solution is to use a time-weighted average price feed so that price is averaged out
+over X periods and multiple sources.
+Not only does this prevent oracle manipulation, but it also reduces the chance you can be front-run, as an order executed right before cannot have as drastic of an impact on the price.
+This condition does not apply for low liquidity assets, which are generally cheaper to manipulate, even for a prolonged time.
+Uniswap v2 provides a <a href="https://github.com/Uniswap/v2-periphery/blob/2efa12e0f2d808d9b49737927f0e416fafa5af68/contracts/examples/ExampleSlidingWindowOracle.sol">sliding window example</a>.</p>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13,20H11V8L5.5,13.5L4.08,12.08L12,4.16L19.92,12.08L18.5,13.5L13,8V20Z" /></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../reentrancy/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Reentrancy" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" /></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Reentrancy
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../frontrunning/" class="md-footer__link md-footer__link--next" aria-label="Next: Frontrunning" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Frontrunning
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z" /></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["toc.integrate", "navigation.instant", "header.autohide", "navigation.top", "navigation.tabs", "navigation.tabs.sticky", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>
